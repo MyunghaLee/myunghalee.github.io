@@ -18,7 +18,7 @@ Then visit `http://localhost:8000`.
 - `styles.css`: colors, typography, layout, and mobile styles.
 - `assets/site.js`: footer year and last-updated dates.
 - `assets/profile.jpg`: profile photo.
-- `assets/fonts/Jetendard-Regular.woff2`: self-hosted Jetendard subset used for the monospace email address.
+- `assets/fonts/Jetendard-Regular.woff2`: self-hosted Jetendard subset, available as the site's monospace font (`.mono`).
 
 Fonts are loaded in each page's `<head>`: Pretendard and Wanted Sans come from CDNs, and Jetendard is self-hosted so everything works on GitHub Pages. Body text uses Pretendard, headings use Wanted Sans, and monospace text uses Jetendard.
 
