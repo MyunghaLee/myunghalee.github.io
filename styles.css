@@ -11,7 +11,7 @@
   --ink: #202124;
   --muted: #5f6368;
   --line: #dadce0;
-  --accent: #0b57d0;
+  --accent: #006580;
 }
 * {
   box-sizing: border-box;
@@ -185,12 +185,12 @@ li {
   margin-bottom: 16px;
 }
 .intro a {
-  color: var(--ink);
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 .intro a:hover {
-  color: var(--muted);
+  color: var(--ink);
 }
 .meta {
   margin: -4px 0 8px;
