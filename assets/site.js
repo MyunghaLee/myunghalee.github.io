@@ -1,4 +1,10 @@
 (function () {
+  // GitHub's API allows only 60 unauthenticated requests per hour per IP, so
+  // results are cached in localStorage for six hours. When a request fails
+  // (offline or rate limited), the last cached values are shown instead, and
+  // if there is no cache either, the dates hardcoded in the HTML remain.
+  var CACHE_KEY = "myunghalee-dates-v1";
+  var CACHE_TTL_MS = 6 * 60 * 60 * 1000;
   var GITHUB_API = "https://api.github.com/repos/";
 
   function getJSON(url) {
@@ -61,24 +67,91 @@
     }
   }
 
-  // CV: latest release or GitHub Pages deployment of myunghalee/cv
-  latestOf([
-    latestRelease("myunghalee/cv"),
-    latestPagesDeployment("myunghalee/cv"),
-  ])
-    .then(function (date) {
-      setDate("cv-updated", date, { month: "long", year: "numeric" });
-    })
-    .catch(function () {});
+  function toDate(value) {
+    if (typeof value !== "string" || value === "") {
+      return null;
+    }
+    var date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  }
 
-  // Website: latest GitHub Pages deployment of myunghalee/myunghalee.github.io
-  latestPagesDeployment("myunghalee/myunghalee.github.io")
-    .then(function (date) {
-      setDate("site-updated", date, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    })
-    .catch(function () {});
+  function readCache() {
+    try {
+      var data = JSON.parse(window.localStorage.getItem(CACHE_KEY));
+      if (!data || typeof data.savedAt !== "number") {
+        return null;
+      }
+      return {
+        savedAt: data.savedAt,
+        cv: toDate(data.cv),
+        site: toDate(data.site),
+      };
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function writeCache(cv, site) {
+    try {
+      window.localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          savedAt: Date.now(),
+          cv: cv ? cv.toISOString() : null,
+          site: site ? site.toISOString() : null,
+        })
+      );
+    } catch (err) {}
+  }
+
+  function isFreshCache(cache) {
+    return !!cache && Date.now() - cache.savedAt < CACHE_TTL_MS;
+  }
+
+  function renderDates(cv, site) {
+    setDate("cv-updated", cv, { month: "long", year: "numeric" });
+    setDate("site-updated", site, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  function fetchCV() {
+    // Latest release or GitHub Pages deployment of myunghalee/cv.
+    return latestOf([
+      latestRelease("myunghalee/cv"),
+      latestPagesDeployment("myunghalee/cv"),
+    ]).catch(function () {
+      return null;
+    });
+  }
+
+  function fetchSite() {
+    // Latest GitHub Pages deployment of myunghalee/myunghalee.github.io.
+    return latestPagesDeployment("myunghalee/myunghalee.github.io").catch(
+      function () {
+        return null;
+      }
+    );
+  }
+
+  var cache = readCache();
+
+  if (cache) {
+    renderDates(cache.cv, cache.site);
+  }
+
+  if (!isFreshCache(cache)) {
+    Promise.all([fetchCV(), fetchSite()]).then(function (dates) {
+      if (!dates[0] && !dates[1]) {
+        // Both requests failed; keep whatever is already displayed.
+        return;
+      }
+      var cv = dates[0] || (cache && cache.cv) || null;
+      var site = dates[1] || (cache && cache.site) || null;
+      writeCache(cv, site);
+      renderDates(cv, site);
+    });
+  }
 })();

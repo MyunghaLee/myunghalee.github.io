@@ -16,7 +16,9 @@ Then visit `http://localhost:8000`.
 
 - `home/index.html`, `projects/index.html`, `gallery/index.html`: page content.
 - `styles.css`: colors, typography, layout, and mobile styles.
-- `assets/site.js`: footer year and last-updated dates.
+- `assets/site.js`: last-updated dates. They are fetched from the GitHub API
+  and cached in `localStorage` for six hours, so repeat visits do not call the
+  API again and stay well within GitHub's rate limits.
 - `assets/profile.jpg`: profile photo.
 
 The site uses Pretendard for all text, loaded from a CDN in each page's `<head>`.
