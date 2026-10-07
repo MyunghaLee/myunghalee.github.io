@@ -14,7 +14,8 @@ Then visit `http://localhost:8000`. The "last updated" dates show their fallback
 
 ## Edit the content
 
-- `home/index.html`, `projects/index.html`, `gallery/index.html`: page content.
+- `index.html`, `gallery/index.html`: page content.
+- `highlights/`: no page of its own. `highlights/index.html` redirects to the default category, and the category pages live under `highlights/research/`, `highlights/awards/`, `highlights/scholarship/`, and `highlights/coursework/`.
 - `styles.css`: colors, typography, layout, and mobile styles.
 - `assets/site.js`: replaces the last-updated dates using `assets/updated.json`.
 - `assets/profile.jpg`: profile photo.

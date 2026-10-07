@@ -179,6 +179,26 @@ li {
   color: var(--muted);
   font-size: 14px;
 }
+.subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 20px 0 28px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.subnav a {
+  color: var(--muted);
+}
+.subnav a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+.subnav a[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+}
 .site-footer {
   border-top: 1px solid var(--line);
   color: var(--muted);
