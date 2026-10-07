@@ -199,6 +199,25 @@ li {
   color: var(--ink);
   font-weight: 600;
 }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px 20px;
+  margin-top: 24px;
+}
+.gallery figure {
+  margin: 0;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 6px;
+}
+.gallery figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
 .site-footer {
   border-top: 1px solid var(--line);
   color: var(--muted);
